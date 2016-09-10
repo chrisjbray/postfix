@@ -17,26 +17,12 @@
 # limitations under the License.
 #
 
-include_recipe 'postfix::_common'
-
 if node['postfix']['main']['smtp_sasl_auth_enable'] == 'yes'
   include_recipe 'postfix::sasl_auth'
 end
 
-include_recipe 'postfix::aliases' if node['postfix']['use_alias_maps']
-
-include_recipe 'postfix::transports' if node['postfix']['use_transport_maps']
-
-include_recipe 'postfix::access' if node['postfix']['use_access_maps']
-
-if node['postfix']['use_virtual_aliases']
-  include_recipe 'postfix::virtual_aliases'
+if node['postfix']['hash_files'] and node['postfix']['hash_files'].size > 0
+  include_recipe 'postfix::databases'
 end
 
-if node['postfix']['use_virtual_aliases_domains']
-  include_recipe 'postfix::virtual_aliases_domains'
-end
-
-if node['postfix']['use_relay_restrictions_maps']
-  include_recipe 'postfix::relay_restrictions'
-end
+include_recipe 'postfix::_common'

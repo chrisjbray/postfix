@@ -38,22 +38,3 @@ if node['postfix']['main']['smtp_sasl_auth_enable'] == 'yes'
   node.default_unless['postfix']['main']['relayhost'] = ''
 end
 
-if node['postfix']['use_alias_maps']
-  node.default_unless['postfix']['main']['alias_maps'] = ["hash:#{node['postfix']['aliases_db']}"]
-end
-
-if node['postfix']['use_transport_maps']
-  node.default_unless['postfix']['main']['transport_maps'] = ["hash:#{node['postfix']['transport_db']}"]
-end
-
-if node['postfix']['use_access_maps']
-  node.default_unless['postfix']['main']['access_maps'] = ["hash:#{node['postfix']['access_db']}"]
-end
-
-if node['postfix']['use_virtual_aliases']
-  node.default_unless['postfix']['main']['virtual_alias_maps'] = ["#{node['postfix']['virtual_alias_db_type']}:#{node['postfix']['virtual_alias_db']}"]
-end
-
-if node['postfix']['use_virtual_aliases_domains']
-  node.default_unless['postfix']['main']['virtual_alias_domains'] = ["#{node['postfix']['virtual_alias_domains_db_type']}:#{node['postfix']['virtual_alias_domains_db']}"]
-end

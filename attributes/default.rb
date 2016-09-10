@@ -19,58 +19,51 @@ default['postfix']['mail_type'] = 'client'
 default['postfix']['relayhost_role'] = 'relayhost'
 default['postfix']['multi_environment_relay'] = false
 default['postfix']['use_procmail'] = false
-default['postfix']['use_alias_maps'] = (node['platform'] == 'freebsd')
-default['postfix']['use_transport_maps'] = false
-default['postfix']['use_access_maps'] = false
-default['postfix']['use_virtual_aliases'] = false
-default['postfix']['use_virtual_aliases_domains'] = false
-default['postfix']['use_relay_restrictions_maps'] = false
-default['postfix']['transports'] = {}
-default['postfix']['access'] = {}
-default['postfix']['virtual_aliases'] = {}
-default['postfix']['virtual_aliases_domains'] = {}
 default['postfix']['main_template_source'] = 'postfix'
 default['postfix']['master_template_source'] = 'postfix'
 default['postfix']['sender_canonical_map_entries'] = {}
 default['postfix']['smtp_generic_map_entries'] = {}
-default['postfix']['access_db_type'] = 'hash'
-default['postfix']['aliases_db_type'] = 'hash'
-default['postfix']['transport_db_type'] = 'hash'
-default['postfix']['virtual_alias_db_type'] = 'hash'
+default['postfix']['access_maps_db_type'] = 'hash'
+default['postfix']['alias_maps_db_type'] = 'hash'
+default['postfix']['transport_maps_db_type'] = 'hash'
+default['postfix']['virtual_alias_maps_db_type'] = 'hash'
 default['postfix']['virtual_alias_domains_db_type'] = 'hash'
+default['postfix']['hash_files'] = {}
+default['postfix']['hash_files']['alias_maps'] = {'postmaster' => 'root'}
+#default['postfix']['hash_files']['relay_restrictions'] = {'*' => 'REJECT'} #TODO: Force last
 
 case node['platform']
 when 'smartos'
   default['postfix']['conf_dir'] = '/opt/local/etc/postfix'
-  default['postfix']['aliases_db'] = '/opt/local/etc/postfix/aliases'
-  default['postfix']['transport_db'] = '/opt/local/etc/postfix/transport'
-  default['postfix']['access_db'] = '/opt/local/etc/postfix/access'
-  default['postfix']['virtual_alias_db'] = '/opt/local/etc/postfix/virtual'
+  default['postfix']['alias_maps_db'] = '/opt/local/etc/postfix/aliases'
+  default['postfix']['transport_maps_db'] = '/opt/local/etc/postfix/transport'
+  default['postfix']['access_maps_db'] = '/opt/local/etc/postfix/access'
+  default['postfix']['virtual_alias_maps_db'] = '/opt/local/etc/postfix/virtual'
   default['postfix']['virtual_alias_domains_db'] = '/opt/local/etc/postfix/virtual_domains'
   default['postfix']['relay_restrictions_db'] = '/opt/local/etc/postfix/relay_restrictions'
 when 'freebsd'
   default['postfix']['conf_dir'] = '/usr/local/etc/postfix'
-  default['postfix']['aliases_db'] = '/etc/aliases'
-  default['postfix']['transport_db'] = '/usr/local/etc/postfix/transport'
-  default['postfix']['access_db'] = '/usr/local/etc/postfix/access'
-  default['postfix']['virtual_alias_db'] = '/usr/local/etc/postfix/virtual'
+  default['postfix']['alias_maps_db'] = '/etc/aliases'
+  default['postfix']['transport_maps_db'] = '/usr/local/etc/postfix/transport'
+  default['postfix']['access_maps_db'] = '/usr/local/etc/postfix/access'
+  default['postfix']['virtual_alias_maps_db'] = '/usr/local/etc/postfix/virtual'
   default['postfix']['virtual_alias_domains_db'] = '/usr/local/etc/postfix/virtual_domains'
   default['postfix']['relay_restrictions_db'] = '/etc/postfix/relay_restrictions'
 when 'omnios'
   default['postfix']['conf_dir'] = '/opt/omni/etc/postfix'
-  default['postfix']['aliases_db'] = '/opt/omni/etc/postfix/aliases'
-  default['postfix']['transport_db'] = '/opt/omni/etc/postfix/transport'
-  default['postfix']['access_db'] = '/opt/omni/etc/postfix/access'
-  default['postfix']['virtual_alias_db'] = '/etc/omni/etc/postfix/virtual'
+  default['postfix']['alias_maps_db'] = '/opt/omni/etc/postfix/aliases'
+  default['postfix']['transport_maps_db'] = '/opt/omni/etc/postfix/transport'
+  default['postfix']['access_maps_db'] = '/opt/omni/etc/postfix/access'
+  default['postfix']['virtual_alias_maps_db'] = '/etc/omni/etc/postfix/virtual'
   default['postfix']['virtual_alias_domains_db'] = '/etc/omni/etc/postfix/virtual_domains'
   default['postfix']['relay_restrictions_db'] = '/opt/omni/etc/postfix/relay_restrictions'
   default['postfix']['uid'] = 11
 else
   default['postfix']['conf_dir'] = '/etc/postfix'
-  default['postfix']['aliases_db'] = '/etc/aliases'
-  default['postfix']['transport_db'] = '/etc/postfix/transport'
-  default['postfix']['access_db'] = '/etc/postfix/access'
-  default['postfix']['virtual_alias_db'] = '/etc/postfix/virtual'
+  default['postfix']['alias_maps_db'] = '/etc/aliases'
+  default['postfix']['transport_maps_db'] = '/etc/postfix/transport'
+  default['postfix']['access_maps_db'] = '/etc/postfix/access'
+  default['postfix']['virtual_alias_maps_db'] = '/etc/postfix/virtual'
   default['postfix']['virtual_alias_domains_db'] = '/etc/postfix/virtual_domains'
   default['postfix']['relay_restrictions_db'] = '/etc/postfix/relay_restrictions'
 end
