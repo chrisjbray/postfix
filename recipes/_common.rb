@@ -71,6 +71,11 @@ when 'omnios'
   end
 end
 
+execute 'update-postfix-alias_maps' do
+  command 'newaliases'
+  action :nothing
+end
+
 execute 'update-postfix-sender_canonical' do
   command "postmap #{node['postfix']['conf_dir']}/sender_canonical"
   action :nothing
