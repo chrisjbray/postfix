@@ -111,6 +111,57 @@ end
 
 # Master.cf attributes
 default['postfix']['master']['submission'] = false
+default['postfix']['master']['services'] = [
+{'service'=>'smtp', 'type'=>'inet', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'smtpd', ]},
+#smtps     inet  n       -       n       -       -       smtpd
+#  -o smtpd_tls_wrappermode=yes
+#  -o smtpd_sasl_auth_enable=yes
+#  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+#628      inet  n       -       n       -       -       qmqpd
+{'service'=>'pickup', 'type'=> 'fifo', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '60', 'maxproc' => '1', 'command' => [ 'pickup', ]},
+{'service'=>'cleanup', 'type'=> 'unix', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'cleanup', ]},
+{'service'=>'qmgr', 'type'=> 'fifo', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '300', 'maxproc' => '1', 'command' => [ 'qmgr', ]},
+{'service'=>'tlsmgr', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '1000?', 'maxproc' => '1', 'command' => [ 'tlsmgr', ]},
+{'service'=>'rewrite', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'trivial-rewrite', ]},
+{'service'=>'bounce', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'bounce', ]},
+{'service'=>'defer', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'bounce', ]},
+{'service'=>'trace', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'bounce', ]},
+{'service'=>'verify', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '1', 'command' => [ 'verify', ]},
+{'service'=>'flush', 'type'=> 'unix', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '1000?', 'maxproc' => '0', 'command' => [ 'flush', ]},
+{'service'=>'proxymap', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'proxymap', ]},
+{'service'=>'smtp', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '500', 'command' => [ 'smtp', ]},
+{'comment'=>'When relaying mail as backup MX, disable fallback_relay to avoid MX loops', 'service'=>'relay', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'smtp', 
+'	-o smtp_fallback_relay=',
+'#       -o smtp_helo_timeout=5 -o smtp_connect_timeout=5',
+]},
+{'service'=>'showq', 'type'=> 'unix', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'showq', ]},
+{'service'=>'error', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'error', ]},
+{'service'=>'discard', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'discard', ]},
+{'service'=>'local', 'type'=> 'unix', 'private' => '-', 'unpriv' => 'n', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'local', ]},
+{'service'=>'virtual', 'type'=> 'unix', 'private' => '-', 'unpriv' => 'n', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'virtual', ]},
+{'service'=>'lmtp', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'lmtp', ]},
+{'service'=>'anvil', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '1', 'command' => [ 'anvil', ]},
+{'service'=>'scache', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'-', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'1', 'command' => ['scache',]},
+
+{'comment'=>'Interfaces to non-Postfix software.', 'service'=>'maildrop', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'n', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'-', 'command' => ['pipe',
+'  flags=DRhu user=vmail argv=/usr/local/bin/maildrop -d ${recipient}'
+]},
+{'comment'=>'The Cyrus deliver program has changed incompatibly, multiple times.', 'service'=>'old-cyrus', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'n', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'-', 'command' => ['pipe',
+'  flags=R user=cyrus argv=/usr/lib/cyrus-imapd/deliver -e -m ${extension} ${user}',
+]},
+{'comment'=>"Cyrus 2.1.5 (Amos Gouaux)\n##Also specify in main.cf: cyrus_destination_recipient_limit=1", 'service'=>'cyrus', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'n', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'-', 'command' => ['pipe',
+'  user=cyrus argv=/usr/lib/cyrus-imapd/deliver -e -r ${sender} -m ${extension} ${user}',
+]},
+{'comment' => 'See the Postfix UUCP_README file for configuration details.', 'service'=>'uucp', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'n', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'-', 'command' => ['pipe',
+'  flags=Fqhu user=uucp argv=uux -r -n -z -a$sender - $nexthop!rmail ($recipient)',
+]},
+{'comment' => '# Other external delivery methods.', 'service'=>'ifmail', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'n', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'-', 'command' => ['pipe',
+'  flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)',
+]},
+{'service'=>'bsmtp', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'n', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'-', 'command' => ['pipe',
+'  flags=Fq. user=foo argv=/usr/local/sbin/bsmtp -f $sender $nexthop $recipient',
+]},
+]
 
 # OS Aliases
 default['postfix']['aliases'] = case node['platform']
