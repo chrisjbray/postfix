@@ -123,7 +123,7 @@ default['postfix']['master']['services'] = [
 {'service'=>'qmgr', 'type'=> 'fifo', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '300', 'maxproc' => '1', 'command' => [ 'qmgr', ]},
 {'service'=>'tlsmgr', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '1000?', 'maxproc' => '1', 'command' => [ 'tlsmgr', ]},
 {'service'=>'rewrite', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '-', 'command' => [ 'trivial-rewrite', ]},
-{'service'=>'bounce', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'bounce', ]},
+{'service'=>'bounce', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'discard', ]},
 {'service'=>'defer', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'bounce', ]},
 {'service'=>'trace', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'bounce', ]},
 {'service'=>'verify', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '1', 'command' => [ 'verify', ]},
