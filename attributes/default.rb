@@ -118,7 +118,10 @@ default['postfix']['master']['services'] = [
 #  -o smtpd_sasl_auth_enable=yes
 #  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
 #628      inet  n       -       n       -       -       qmqpd
-{'service'=>'pickup', 'type'=> 'fifo', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '60', 'maxproc' => '1', 'command' => [ 'pickup', ]},
+{'service'=>'pickup', 'type'=> 'fifo', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '60', 'maxproc' => '1', 'command' => [ 'pickup', 
+'        -o content_filter=',
+'        -o receive_override_options=no_header_body_checks',
+]},
 {'service'=>'cleanup', 'type'=> 'unix', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '-', 'maxproc' => '0', 'command' => [ 'cleanup', ]},
 {'service'=>'qmgr', 'type'=> 'fifo', 'private' => 'n', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '300', 'maxproc' => '1', 'command' => [ 'qmgr', ]},
 {'service'=>'tlsmgr', 'type'=> 'unix', 'private' => '-', 'unpriv' => '-', 'chroot' => 'n', 'wakeup' => '1000?', 'maxproc' => '1', 'command' => [ 'tlsmgr', ]},
@@ -164,6 +167,37 @@ default['postfix']['master']['services'] = [
 {'service'=>'bsmtp', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'n', 'chroot'=>'n', 'wakeup'=>'-', 'maxproc'=>'-', 'command' => ['pipe',
 '  flags=Fq. user=foo argv=/usr/local/sbin/bsmtp -f $sender $nexthop $recipient',
 ]},
+
+
+{'comment'=>'amavisd for span and virus filtering',
+'service'=>'smtp-amavis', 'type'=>'unix','private'=>'-', 'unpriv'=>'-', 'chroot'=>'-', 'wakeup'=>'-', 'maxproc'=>'2', 'command'=> ['smtp',
+'        -o smtp_data_done_timeout=1200',
+'        -o smtp_send_xforward_command=yes',
+'        -o disable_dns_lookups=yes',
+'        -o max_use=20',
+]},
+{'comment'=>'return from amavisd',
+'service'=>'127.0.0.1:10025', 'type'=>'inet','private'=>'n', 'unpriv'=>'-', 'chroot'=>'-', 'wakeup'=>'-', 'maxproc'=>'-', 'command'=> ['smtpd',
+'        -o content_filter=',
+'        -o local_recipient_maps=',
+'        -o relay_recipient_maps=',
+'        -o smtpd_restriction_classes=',
+'        -o smtpd_delay_reject=no',
+'        -o smtpd_client_restrictions=permit_mynetworks,reject',
+'        -o smtpd_helo_restrictions=',
+'        -o smtpd_sender_restrictions=',
+'        -o smtpd_recipient_restrictions=permit_mynetworks,reject',
+'        -o smtpd_data_restrictions=reject_unauth_pipelining',
+'        -o smtpd_end_of_data_restrictions=',
+'        -o mynetworks=127.0.0.0/8',
+'        -o smtpd_error_sleep_time=0',
+'        -o smtpd_soft_error_limit=1001',
+'        -o smtpd_hard_error_limit=1000',
+'        -o smtpd_client_connection_count_limit=0',
+'        -o smtpd_client_connection_rate_limit=0',
+'        -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks',
+]}
+
 ]
 
 # OS Aliases
