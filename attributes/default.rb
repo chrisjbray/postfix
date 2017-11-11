@@ -168,7 +168,6 @@ default['postfix']['master']['services'] = [
 '  flags=Fq. user=foo argv=/usr/local/sbin/bsmtp -f $sender $nexthop $recipient',
 ]},
 
-
 {'comment'=>'amavisd for span and virus filtering',
 'service'=>'smtp-amavis', 'type'=>'unix','private'=>'-', 'unpriv'=>'-', 'chroot'=>'-', 'wakeup'=>'-', 'maxproc'=>'2', 'command'=> ['smtp',
 '        -o smtp_data_done_timeout=1200',
@@ -196,8 +195,8 @@ default['postfix']['master']['services'] = [
 '        -o smtpd_client_connection_count_limit=0',
 '        -o smtpd_client_connection_rate_limit=0',
 '        -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks',
-]}
-
+]},
+{'comment' => '# Added in a Postfix update', 'service'=>'retry', 'type'=>'unix', 'private'=>'-', 'unpriv'=>'-', 'chroot'=>'-', 'wakeup'=>'-', 'maxproc'=>'-', 'command'=>['error']},
 ]
 
 # OS Aliases
